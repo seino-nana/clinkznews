@@ -51,10 +51,10 @@ export function getSport(page) {
   })
 }
 
-// 影视新闻
-export function getMovie(page) {
+// 国际新闻
+export function getWorld(page) {
   return  request({
-    url: '/film/index',
+    url: '/world/index',
     params: {
       key: KEY,
       num: 10,
@@ -69,7 +69,8 @@ export function getAuto(page) {
     url: '/auto/index',
     params: {
       key: KEY,
-      num: ''
+      num: '',
+      page
     }
   })
 }

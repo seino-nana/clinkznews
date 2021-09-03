@@ -3,10 +3,13 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+// 图片懒加载
 import VueLazyload from 'vue-lazyload'
 
 import Router from 'vue-router'
 
+// 添加事件总线
+Vue.prototype.$bus = new Vue()
 
 // 图片懒加载的插件
 Vue.use(VueLazyload, {

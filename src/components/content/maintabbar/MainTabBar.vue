@@ -5,10 +5,10 @@
       <img slot="item-icon-active" src="@/assets/img/tabbar/news_active.png" alt=""> 
       <div slot="item-text">首页</div>
     </tab-bar-item>
-    <tab-bar-item path="/video">
-      <img slot="item-icon" src="@/assets/img/tabbar/video.png" alt=""> 
-      <img slot="item-icon-active" src="@/assets/img/tabbar/video_active.png" alt="">   
-      <div slot="item-text">视频</div>
+    <tab-bar-item path="/local">
+      <img slot="item-icon" src="@/assets/img/tabbar/bendi.png" alt=""> 
+      <img slot="item-icon-active" src="@/assets/img/tabbar/bendi_active.png" alt="">   
+      <div slot="item-text">本地新闻</div>
     </tab-bar-item>
   </tab-bar>
 </template>

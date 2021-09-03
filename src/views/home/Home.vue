@@ -2,7 +2,14 @@
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">每日新闻</div></nav-bar>
     <tab-control :titles="titles" @tabClick="tabClick"></tab-control>
-    <news-list :news="showNews"/>
+    <scroll class="content" 
+            ref="scroll"
+            :probe-type="3"
+            :pull-up-load= "true"
+            @pullingUp="loadMore"
+            >
+      <news-list :news="showNews"/>
+    </scroll>
   </div>
 </template>
 
@@ -10,13 +17,14 @@
 import NavBar from '@/components/common/navbar/NavBar'
 import TabControl from '@/components/content/tabcontrol/TabControl'
 import NewsList from '@/components/content/news/NewsList'
+import Scroll from '@/components/common/scroll/Scroll'
 
 // 网络请求
 import { getHeadline,
          getSocial,
          getInternet,
          getSport,
-         getMovie,
+         getWorld,
          getAuto,
          getTravel
         } from '@/network/home'
@@ -25,23 +33,25 @@ export default {
   name: 'Home',
   data(){
     return {
-      titles: ['头条','社会','科技','体育','影视','汽车','旅游'],
+      titles: ['头条','社会','科技','体育','国际','汽车','旅游'],
       news: {
         headline: {page: 0,list: []},
         social: {page: 0,list: []},
         internet: {page: 0,list: []},
         sport: {page: 0,list: []},
-        movie: {page: 0,list: []},
+        world: {page: 0,list: []},
         auto: {page: 0,list: []},
         travel: {page: 0,list: []},
       },
-      currentType: 'headline'
+      currentType: 'headline',
+      itemImageListener: null
     }
   },
   components: {
     NavBar,
     TabControl,
-    NewsList
+    NewsList,
+    Scroll
   },
   computed: {
       showNews() {
@@ -57,12 +67,15 @@ export default {
     this._getInternet()
     // 获取体育数据
     this._getSport()
-    // 获取影视数据
-    this._getMovie()
+    // 获取国际新闻数据
+    this._getWorld()
     // 获取汽车数据
     this._getAuto()
     // 获取旅游数据
     this._getTravel()
+  },
+  mounted() {
+    this.$bus.$on('imageLoad',this.$refs.scroll.refresh)
   },
   methods: {
     /*
@@ -83,7 +96,7 @@ export default {
           this.currentType = 'sport'
           break;
         case 4:
-          this.currentType = 'movie'
+          this.currentType = 'world'
           break;
         case 5:
           this.currentType = 'auto'
@@ -91,8 +104,36 @@ export default {
         case 6:
           this.currentType = 'travel'
       }
+      // 每次切换回到顶部
+      this.$refs.scroll.scroll.scrollTo(0,0,300)
     },
     
+    // 上拉加载更多
+    loadMore() {
+      switch(this.currentType) {
+        case 'headline':
+          this._getHeadline()
+          break;
+        case 'social':
+          this._getSocial()
+          break;
+        case 'internet':
+          this._getInternet()
+          break;
+        case 'sport':
+          this._getSport()
+          break;
+        case 'world':
+          this._getWorld()
+          break;
+        case 'auto':
+          this._getAuto()
+          break;
+        case 'travel':
+          this._getTravel()
+          break;
+      }
+    },
     /*
       网络请求相关
     */
@@ -102,14 +143,16 @@ export default {
       getHeadline(page).then(res => {
         this.news.headline.list.push(...res.newslist)
         this.news.headline.page += 1
+        this.$refs.scroll.finishPullUp()
       })
     },
-    // 军事
+    // 社会
     _getSocial() {
       const page = this.news.social.page + 1
       getSocial(page).then(res => {
         this.news.social.list.push(...res.newslist)
         this.news.social.page += 1
+        this.$refs.scroll.finishPullUp()
       })
     },
     // 科技
@@ -118,6 +161,7 @@ export default {
       getInternet(page).then(res => {
         this.news.internet.list.push(...res.newslist)
         this.news.internet.page += 1
+        this.$refs.scroll.finishPullUp()
       })
     },
     // 体育
@@ -126,14 +170,16 @@ export default {
       getSport(page).then(res => {
         this.news.sport.list.push(...res.newslist)
         this.news.sport.page += 1
+        this.$refs.scroll.finishPullUp()
       })
     },
-    // 影视
-    _getMovie() {
-      const page = this.news.movie.page + 1
-      getMovie(page).then(res => {
-        this.news.movie.list.push(...res.newslist)
-        this.news.movie.page += 1
+    // 国际
+    _getWorld() {
+      const page = this.news.world.page + 1
+      getWorld(page).then(res => {
+        this.news.world.list.push(...res.newslist)
+        this.news.world.page += 1
+        this.$refs.scroll.finishPullUp()
       })
     },
     // 汽车
@@ -142,6 +188,7 @@ export default {
       getAuto(page).then(res => {
         this.news.auto.list.push(...res.newslist)
         this.news.auto.page += 1
+        this.$refs.scroll.finishPullUp()
       })
     },
     // 旅游
@@ -150,6 +197,8 @@ export default {
       getTravel(page).then(res => {
         this.news.travel.list.push(...res.newslist)
         this.news.travel.page += 1
+        // 上拉加载更多的请求
+        this.$refs.scroll.finishPullUp()
       })
     }
   }
@@ -157,13 +206,22 @@ export default {
 </script>
 <style scoped>
 #home {
-  background-color: #ddd;
+  position: relative;
+  height: 100vh;
+  background-color: #eee;
 }
 .home-nav {
-  text-align: center;
   font-size: 18px;
   color: #fff;
   background-color: var(--color-high-text);
 }
 
+.content {
+  overflow: hidden;
+  position: absolute;
+  top: 88px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
+}
 </style>

@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 
 // 懒加载
 const Home = () => import('@/views/home/Home')
-const Video = () => import('@/views/video/Video')
+const Local = () => import('@/views/local/Local')
 
 Vue.use(VueRouter)
 
@@ -17,8 +17,8 @@ const routes = [
     component: Home
   },
   {
-    path: '/video',
-    component: Video
+    path: '/local',
+    component: Local
   }
 ]
 

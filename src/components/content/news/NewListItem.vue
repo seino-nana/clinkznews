@@ -6,7 +6,7 @@
         <span class="ctime">{{item.ctime}}</span>
         <span class="source">{{item.source}}</span>
       </div>
-      <img v-lazy="item.picUrl" alt="">
+      <img v-lazy="item.picUrl" alt="" @load="imageLoad">
     </a>
   </div>
 </template>
@@ -20,6 +20,12 @@ export default {
       default() {
         return {}
       }
+    }
+  },
+  methods: {
+    // 通过事件总线
+    imageLoad() {
+      this.$bus.$emit('imageLoad')
     }
   }
 }

@@ -27,6 +27,7 @@ export default {
 .news-list-item {
   height: 120px;
   margin: 5px;
+  margin-top: 0;
   background-color: #fff;
   border-radius: 10px;
 }
