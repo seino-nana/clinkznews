@@ -45,6 +45,7 @@ export default {
 }
 .tab-control-item {
   flex: 1;
+  font-size: 18px;
 }
 .active {
   font-weight: 700;

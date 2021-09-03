@@ -42,7 +42,8 @@ export default {
   width: 220px;
 }
 .title {
-    padding-top: 5px;
+  font-size: 18px;
+  padding-top: 5px;
 }
 .ctime,.source {
   font-size: 14px;
