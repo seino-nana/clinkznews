@@ -42,8 +42,13 @@ export default {
   width: 220px;
 }
 .title {
-  font-size: 18px;
+  font-size: 16px;
   padding-top: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 .ctime,.source {
   font-size: 14px;
